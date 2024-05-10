@@ -20,10 +20,12 @@ class Network: ObservableObject {
 	}
 	@Published var hasError: Bool = false
 	@Published var shouldPresent: Bool = false
+	@Published var isFetching: Bool = false
 	
 	var dataTask: URLSessionDataTask?
 	
 	func getMessages(emailAddress: String) {
+		self.isFetching = true
 		dataTask?.cancel()
 		let matcher = /[aA0-zZ9]+@[aA0-zZ9]+\.[aA0-zZ9]+/
 		
@@ -40,7 +42,7 @@ class Network: ObservableObject {
 		
 		self.dataTask = URLSession.shared.dataTask(with: urlRequest, completionHandler: { [weak self] data, resp, err in
 			DispatchQueue.main.async {
-				
+				self?.isFetching = false
 				if let err = err {
 					self?.error = NetworkError.client(err.localizedDescription)
 					return
@@ -80,7 +82,13 @@ enum NetworkError: Error {
 	var msg: String {
 		switch self {
 			case .client(let errMsg): return errMsg
-			case .server: return "Server Error. Missing Data"
+			case .server: return "There is no data for the provided email address."
+		}
+	}
+	var title: String {
+		switch self {
+			case .client(_): return "Error"
+			case .server: return "Sorry!"
 		}
 	}
 	var hasError: Bool {
