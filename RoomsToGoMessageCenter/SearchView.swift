@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SearchView: View {
 	@State var emailText = ""
-	@State var isBtnActive = false
 	
 	@EnvironmentObject var network: Network
 	
