@@ -49,6 +49,7 @@ class Network: ObservableObject {
 				}
 				guard let httpResp = resp as? HTTPURLResponse, (200...300).contains(httpResp.statusCode) else {
 					self?.error = NetworkError.server
+					self?.messages = Messages(msgAry: [[]])
 					return
 				}
 				let messages: Messages
@@ -82,7 +83,7 @@ enum NetworkError: Error {
 	var msg: String {
 		switch self {
 			case .client(let errMsg): return errMsg
-			case .server: return "There is no data for the provided email address."
+			case .server: return "There is no new data for the provided email address."
 		}
 	}
 	var title: String {

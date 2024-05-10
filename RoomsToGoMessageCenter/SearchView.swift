@@ -62,7 +62,7 @@ struct SearchView: View {
 				}
 			}
 			.navigationDestination(isPresented: $network.shouldPresent, destination: {
-				MessagesView()
+				MessagesView(emailAddress: emailText)
 			})
 			.alert(isPresented: $network.hasError) { () -> Alert in
 				Alert(title: Text(network.error.title),

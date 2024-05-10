@@ -51,7 +51,6 @@ extension Message {
 extension Message: Comparable {
 	static func < (lhs: Message, rhs: Message) -> Bool {
 		guard let lhsDate = lhs.getUTCDate(), let rhsDate = rhs.getUTCDate() else { return false }
-		let calender = Calendar(identifier: .gregorian)
 		return lhsDate < rhsDate
 	}
 	
@@ -59,27 +58,28 @@ extension Message: Comparable {
 }
 
 extension Messages {
-	func generateJSON() -> Self? {
+	#if DEBUG
+	 func generateJSONTest() -> Self? {
 		let jsonSTR =
 		"""
-		 {
+		 [{
 		   "name": "Michael Taylor",
 		   "date": "2022-02-22T05:00:00.000Z",
 		   "message": "Your order has been shipped. Track now!"
-		   }
+		   }]
 		"""
 		
 		
 		let jsonData = jsonSTR.data(using: .utf8)!
 		do {
-			let msgAry = try JSONDecoder().decode([Message].self, from: jsonData)
+			let msgsAry = try JSONDecoder().decode([Message].self, from: jsonData)
+			return Self(msgAry: [msgsAry])
 		} catch let err {
-			print("Cannot Generate \(String(describing: Self.self)) data")
+			print("Cannot Generate \(String(describing: Self.self)) data. Error: \(err)")
 			return nil
 		}
-		return Self(msgAry: msgAry)
 	}
-	
+	#endif
 }
 
 

@@ -9,7 +9,10 @@ import Foundation
 import SwiftUI
 
 struct MessagesView: View {
+	@State var textViewID: String = "\(UUID())"
 	
+	
+	let emailAddress: String
 	@EnvironmentObject var network: Network
 	
 	var body: some View {
@@ -35,17 +38,36 @@ struct MessagesView: View {
 				}
 			}
 			.listStyle(.plain)
+			.refreshable {
+				if emailAddress != "" {
+					network.getMessages(emailAddress: emailAddress)
+				}
+			}
 		} else {
-			Text("Sorry There are No Updates Yet.\nCheck back again Soon! 🙂")
-				.padding()
-				.multilineTextAlignment(.center)
-				.font(Font.custom("Poppins-Medium", size: 14))
+			ScrollView {
+				
+				Text("Sorry There are No Updates Yet.\nCheck back again Soon! 🙂")
+					.padding()
+					.multilineTextAlignment(.center)
+					.font(Font.custom("Poppins-Medium", size: 14))
+					.frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 2)
+					.id(textViewID)
+			}
+			.refreshable {
+				if emailAddress != "" {
+					network.getMessages(emailAddress: emailAddress)
+				}
+			}
 		}
 	}
 }
 
 
 #Preview {
-	MessagesView()
+	MessagesView(emailAddress: "mtaylor@gmail.com")
 		.environmentObject(Network())
 }
+
+
+
+
