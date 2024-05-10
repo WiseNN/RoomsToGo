@@ -13,7 +13,7 @@ struct MessagesView: View {
 	@EnvironmentObject var network: Network
 	
 	var body: some View {
-		if !network.messages.msgAry.first!.isEmpty {
+		if let first = network.messages.msgAry.first, !first.isEmpty {
 			List(network.messages.msgAry, id: \.self) { item in
 				Section {
 					ForEach(item, id: \.self) { msg in
