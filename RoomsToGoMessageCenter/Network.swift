@@ -31,6 +31,7 @@ class Network: ObservableObject {
 		
 		guard emailAddress.wholeMatch(of: matcher) != nil  else {
 			self.error = NetworkError.client("Please enter a valid email address")
+			self.messages = .init(msgAry: [[]])
 			return
 		}
 		
@@ -45,6 +46,7 @@ class Network: ObservableObject {
 				self?.isFetching = false
 				if let err = err {
 					self?.error = NetworkError.client(err.localizedDescription)
+					self?.messages = .init(msgAry: [[]])
 					return
 				}
 				guard let httpResp = resp as? HTTPURLResponse, (200...300).contains(httpResp.statusCode) else {
@@ -66,13 +68,12 @@ class Network: ObservableObject {
 				} catch let err {
 					print("Error: \(err)")
 					self?.error = NetworkError.client(err.localizedDescription)
+					self?.messages = .init(msgAry: [[]])
 				}
 			}
 		})
 		self.dataTask?.resume()
 	}
-	
-	
 }
 
 
